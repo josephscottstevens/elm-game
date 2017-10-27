@@ -157,9 +157,7 @@ view model =
             , text ("you have " ++ toString model.stone ++ " stone")
             , text ("you have " ++ toString model.mines ++ " mines")
             ]
-        , div []
-            [ lumbercampsBtn model
-            , minesBtn model
-            , goldminesBtn model
-            ]
+        , lumbercampsBtn model
+        , minesBtn model
+        , goldminesBtn model
         ]

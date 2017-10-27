@@ -8322,104 +8322,7 @@ var _elm_lang$core$Time$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
 
-var _user$project$Main$buildLumberCamp = function (model) {
-	return (_elm_lang$core$Native_Utils.cmp(model.wood, 10) > 0) ? _elm_lang$core$Native_Utils.update(
-		model,
-		{lumbercamps: model.lumbercamps + 1, wood: model.wood - 10}) : model;
-};
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'MineWood':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{wood: model.wood + 1}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'MineStone':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{stone: model.stone + 1}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'BuildLumberCamp':
-				return {
-					ctor: '_Tuple2',
-					_0: _user$project$Main$buildLumberCamp(model),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{wood: model.wood + model.lumbercamps}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
-var _user$project$Main$lumbercamps = function (model) {
-	return (_elm_lang$core$Native_Utils.cmp(model.wood, 10) > 0) ? A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('build lumbercamp'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'you have ',
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									_elm_lang$core$Basics$toString(model.lumbercamps),
-									'lumbercamp'))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		}) : A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{ctor: '[]'});
-};
-var _user$project$Main$init = {
-	ctor: '_Tuple2',
-	_0: {wood: 0, stone: 0, mines: 0, lumbercamps: 0},
-	_1: _elm_lang$core$Platform_Cmd$none
-};
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {wood: a, stone: b, mines: c, lumbercamps: d};
-	});
-var _user$project$Main$BuildLumberCamp = {ctor: 'BuildLumberCamp'};
-var _user$project$Main$Tick = function (a) {
-	return {ctor: 'Tick', _0: a};
-};
-var _user$project$Main$subscriptions = function (model) {
-	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Main$Tick);
-};
-var _user$project$Main$MineStone = {ctor: 'MineStone'};
-var _user$project$Main$MineWood = {ctor: 'MineWood'};
-var _user$project$Main$basicBuildings = function (model) {
+var _user$project$Main$showResources = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -8453,15 +8356,222 @@ var _user$project$Main$basicBuildings = function (model) {
 				_1: {
 					ctor: '::',
 					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'You have: ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(model.gold),
+										' gold'))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$buildGoldmines = function (model) {
+	return (_elm_lang$core$Native_Utils.cmp(model.gold, model.priceGoldmines) > 0) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{goldmines: model.goldmines + 1, gold: model.gold - model.priceGoldmines, priceGoldmines: model.priceGoldmines * 2}) : model;
+};
+var _user$project$Main$buildMine = function (model) {
+	return (_elm_lang$core$Native_Utils.cmp(model.stone, model.priceMine) > 0) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{mines: model.mines + 1, stone: model.stone - model.priceMine, priceMine: model.priceMine * 2}) : model;
+};
+var _user$project$Main$buildLumberCamp = function (model) {
+	return (_elm_lang$core$Native_Utils.cmp(model.wood, model.priceLumberCamp) > 0) ? _elm_lang$core$Native_Utils.update(
+		model,
+		{lumbercamps: model.lumbercamps + 1, wood: model.wood - model.priceLumberCamp, priceLumberCamp: model.priceLumberCamp * 2}) : model;
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'MineWood':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{wood: model.wood + 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'MineStone':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{stone: model.stone + 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'MineGold':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{gold: model.gold + 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'BuildLumberCamp':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Main$buildLumberCamp(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'BuildMine':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Main$buildMine(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'BuildGoldmines':
+				return {
+					ctor: '_Tuple2',
+					_0: _user$project$Main$buildGoldmines(model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{wood: model.wood + model.lumbercamps, goldmines: model.gold + model.goldmines, stone: model.stone + model.mines}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: {wood: 0, stone: 0, gold: 0, mines: 0, lumbercamps: 0, goldmines: 0, priceMine: 10, priceLumberCamp: 10, priceGoldmines: 10},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$Main$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {wood: a, stone: b, gold: c, mines: d, goldmines: e, lumbercamps: f, priceMine: g, priceLumberCamp: h, priceGoldmines: i};
+	});
+var _user$project$Main$BuildGoldmines = {ctor: 'BuildGoldmines'};
+var _user$project$Main$goldmines = function (model) {
+	return ((_elm_lang$core$Native_Utils.cmp(model.gold, model.priceGoldmines) > -1) || (_elm_lang$core$Native_Utils.cmp(model.goldmines, 0) > 0)) ? A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$BuildGoldmines),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'build Goldmine (costs: ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(model.priceGoldmines),
+						')'))),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{ctor: '[]'});
+};
+var _user$project$Main$BuildMine = {ctor: 'BuildMine'};
+var _user$project$Main$mines = function (model) {
+	return ((_elm_lang$core$Native_Utils.cmp(model.stone, model.priceMine) > -1) || (_elm_lang$core$Native_Utils.cmp(model.mines, 0) > 0)) ? A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$BuildMine),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'build mine (costs: ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(model.priceMine),
+						')'))),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{ctor: '[]'});
+};
+var _user$project$Main$BuildLumberCamp = {ctor: 'BuildLumberCamp'};
+var _user$project$Main$lumbercamps = function (model) {
+	return ((_elm_lang$core$Native_Utils.cmp(model.wood, model.priceLumberCamp) > -1) || (_elm_lang$core$Native_Utils.cmp(model.lumbercamps, 0) > 0)) ? A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$BuildLumberCamp),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'build lumbercamp (costs: ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(model.priceLumberCamp),
+						')'))),
+			_1: {ctor: '[]'}
+		}) : A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{ctor: '[]'});
+};
+var _user$project$Main$Tick = function (a) {
+	return {ctor: 'Tick', _0: a};
+};
+var _user$project$Main$subscriptions = function (model) {
+	return A2(_elm_lang$core$Time$every, _elm_lang$core$Time$second, _user$project$Main$Tick);
+};
+var _user$project$Main$MineGold = {ctor: 'MineGold'};
+var _user$project$Main$MineStone = {ctor: 'MineStone'};
+var _user$project$Main$MineWood = {ctor: 'MineWood'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$showResources(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$MineWood),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Mine Wood'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$MineWood),
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$MineStone),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Mine Wood'),
+							_0: _elm_lang$html$Html$text('Mine Stone'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -8470,31 +8580,62 @@ var _user$project$Main$basicBuildings = function (model) {
 							_elm_lang$html$Html$button,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$MineStone),
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$MineGold),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Mine Stone'),
+								_0: _elm_lang$html$Html$text('How do I mine for fish?'),
 								_1: {ctor: '[]'}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'you have ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(model.lumbercamps),
+										' lumbercamps'))),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'you have ',
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											_elm_lang$core$Basics$toString(model.stone),
+											' stone'))),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'you have ',
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												_elm_lang$core$Basics$toString(model.mines),
+												' mines'))),
+									_1: {
+										ctor: '::',
+										_0: _user$project$Main$lumbercamps(model),
+										_1: {
+											ctor: '::',
+											_0: _user$project$Main$mines(model),
+											_1: {
+												ctor: '::',
+												_0: _user$project$Main$goldmines(model),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
-			}
-		});
-};
-var _user$project$Main$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _user$project$Main$basicBuildings(model),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$lumbercamps(model),
-				_1: {ctor: '[]'}
 			}
 		});
 };

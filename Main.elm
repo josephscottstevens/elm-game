@@ -7,7 +7,9 @@ import Html.Events exposing (onClick)
 import Material
 import Material.Button as Button
 import Material.Options as Options exposing (css)
+import Material.Progress as Loading
 import Material.Scheme
+import Material.Spinner as Loading
 import Time exposing (Time, millisecond)
 
 
@@ -43,14 +45,14 @@ type Msg
 type alias Model =
     { resources : List Resource
     , mdl : Material.Model
-    , count : Int
+    , ct : Float
     }
 
 
 init : ( Model, Cmd Msg )
 init =
     { resources = []
-    , count = 0
+    , ct = 0
     , mdl = Material.model
     }
         ! []
@@ -60,14 +62,15 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick newTime ->
-            model ! []
+            { model | ct = model.ct + 1 }
+                ! []
 
         Increase ->
-            { model | count = model.count + 1 }
+            { model | ct = model.ct + 10 }
                 ! []
 
         Reset ->
-            { model | count = 0 }
+            { model | ct = 0 }
                 ! []
 
         Mdl msg_ ->
@@ -78,11 +81,19 @@ type alias Mdl =
     Material.Model
 
 
+loadingFunction : Float -> Float
+loadingFunction t =
+    if t >= 100.0 then
+        100.0
+    else
+        t
+
+
 view : Model -> Html Msg
 view model =
     div
         [ style [ ( "padding", "2rem" ) ] ]
-        [ text ("Current count: " ++ toString model.count)
+        [ text ("Current count: " ++ toString model.ct)
 
         {- We construct the instances of the Button component that we need, one
            for the increase button, one for the reset button. First, the increase
@@ -111,5 +122,6 @@ view model =
             model.mdl
             [ Options.onClick Reset ]
             [ text "Reset" ]
+        , Loading.progress (loadingFunction model.ct)
         ]
         |> Material.Scheme.top

@@ -20,6 +20,34 @@ subscriptions model =
     Time.every second Tick
 
 
+
+-- pick starting equipment
+-- clear area for telepad
+-- they phase in some stuff for you
+-- find rare stuff, put in on the telepad
+-- get new stuff, collect points for stuff found
+
+
+type Screen
+    = InitialScreen
+    | SurvivalScreen
+
+
+type alias ResourceName =
+    { food : Float
+    , water : Float
+    , energy : Float
+    , health : Float
+    }
+
+
+type alias Resource =
+    { resourceName : ResourceName
+    , currentAmount : Float
+    , maxAmount : Float
+    }
+
+
 type alias Model =
     { wood : Float
     , stone : Float

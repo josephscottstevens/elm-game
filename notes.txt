@@ -1,0 +1,9 @@
+pick starting equipment
+clear area for telepad
+they phase in some stuff for you
+find rare stuff, put in on the telepad
+get new stuff, collect points for stuff found
+
+type Screen
+    = InitialScreen
+    | SurvivalScreen

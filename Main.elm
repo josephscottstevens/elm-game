@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, button, div, form, label, li, text)
 import Html.Events exposing (onClick)
-import Time exposing (Time, second)
+import Time exposing (Time, millisecond)
 
 
 main : Program Never Model Msg
@@ -17,7 +17,7 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every second Tick
+    Time.every (millisecond * 100) Tick
 
 
 
@@ -159,21 +159,26 @@ update msg model =
 
         Tick newTime ->
             ( { model
-                | wood = model.wood + model.lumbercamps
-                , goldmines = model.gold + model.goldmines
-                , stone = model.stone + model.mines
+                | wood = model.wood + (model.lumbercamps * 0.1)
+                , goldmines = model.gold + (model.goldmines * 0.1)
+                , stone = model.stone + (model.mines * 0.1)
               }
             , Cmd.none
             )
+
+
+displayRes : Float -> String
+displayRes t =
+    toString (floor t)
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ text ("You have: " ++ toString model.wood ++ " wood")
-            , div [] [ text ("You have: " ++ toString model.stone ++ " stone") ]
-            , div [] [ text ("You have: " ++ toString model.gold ++ " gold") ]
+            [ text ("You have: " ++ displayRes model.wood ++ " wood")
+            , div [] [ text ("You have: " ++ displayRes model.stone ++ " stone") ]
+            , div [] [ text ("You have: " ++ displayRes model.gold ++ " gold") ]
             ]
         , div []
             [ button [ onClick MineWood ] [ text "Mine Wood" ]
@@ -181,9 +186,9 @@ view model =
             , button [ onClick MineGold ] [ text "How do I mine for fish?" ]
             ]
         , div []
-            [ text ("you have " ++ toString model.lumbercamps ++ " lumbercamps")
-            , text ("you have " ++ toString model.stone ++ " stone")
-            , text ("you have " ++ toString model.mines ++ " mines")
+            [ text ("you have " ++ displayRes model.lumbercamps ++ " lumbercamps")
+            , text ("you have " ++ displayRes model.stone ++ " stone")
+            , text ("you have " ++ displayRes model.mines ++ " mines")
             ]
         , lumbercampsBtn model
         , minesBtn model
